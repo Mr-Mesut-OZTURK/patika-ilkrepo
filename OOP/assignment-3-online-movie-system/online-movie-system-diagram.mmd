@@ -1,0 +1,78 @@
+classDiagram
+    class MovieApp {
+        +listMovies(): List~Movie~
+        +sortMovies(criteria: String): List~Movie~
+        +subscribe(user: User): Subscriber
+    }
+
+    class User {
+        <<abstract>>
+        +id: String
+        +fullName: String
+        +email: String
+    }
+
+    class RegularUser {
+    }
+
+    class Subscriber {
+        +creditBalance: int
+        +buyCredits(amount: int): void
+        +rentMovie(movie: Movie): Rental
+    }
+
+    class Movie {
+        +id: String
+        +title: String
+        +genre: String
+        +price: double
+        +rentalCreditCost: int
+        +isAvailable: boolean
+    }
+
+    class Purchase {
+        +id: String
+        +purchaseDate: DateTime
+        +amount: double
+    }
+
+    class Rental {
+        +id: String
+        +rentalDate: DateTime
+        +usedCredits: int
+    }
+
+    class CreditPurchase {
+        +id: String
+        +creditAmount: int
+        +purchaseDate: DateTime
+    }
+
+    class MovieRequest {
+        +id: String
+        +requestDate: DateTime
+        +status: RequestStatus
+    }
+
+    class RequestStatus {
+        <<enumeration>>
+        PENDING
+        APPROVED
+        REJECTED
+    }
+
+    User <|-- RegularUser
+    User <|-- Subscriber
+
+    MovieApp "1" o-- "0..*" Movie : lists
+    MovieApp "1" o-- "0..*" User : manages
+
+    User "1" --> "0..*" Purchase : makes
+    Purchase "1" --> "1" Movie : for
+
+    Subscriber "1" --> "0..*" Rental : rents
+    Rental "1" --> "1" Movie : for
+
+    Subscriber "1" --> "0..*" CreditPurchase : buys
+    User "1" --> "0..*" MovieRequest : creates
+    MovieRequest "1" --> "1" Movie : requested movie

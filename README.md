@@ -17,14 +17,24 @@ git clone https://github.com/cengizcmataraci/kodluyoruzilkrepo.git
 Projeyi cloneladıktan sonra Visual Studio Code programında açınız.
 
 Linux için:
+
 ```linux
 cd kodluyoruzilkrepo
 code .
 ```
 
+## Project Folders
+
+- HTML calismalari: `HTML/`
+- CSS calismalari: `CSS/`
+- Bootstrap calismalari: `BOOTSTRAP/`
+- React calismalari: `react/`
+- Object Oriented Programming odevleri: `OOP/`
+
 ## Contributing
+
 Pull requestler kabul edilir. Büyük değişiklikler için, lütfen önce neyi değiştirmek istediğinizi tartışmak için bir konu açınız.
 
-
 ## License
+
 [MIT](https://choosealicense.com/licenses/mit/)

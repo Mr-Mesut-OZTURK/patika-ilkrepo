@@ -1,0 +1,168 @@
+classDiagram
+    class ElevatorSystem {
+        +startSimulation(): void
+        +step(): void
+        +assignRequest(request: TripRequest): void
+    }
+
+    class Building {
+        +name: String
+        +floorCount: int
+    }
+
+    class Floor {
+        +number: int
+    }
+
+    class FloorElevatorAccess {
+        +shaftNumber: int
+    }
+
+    class ElevatorController {
+        +selectElevator(request: TripRequest): Elevator
+    }
+
+    class Elevator {
+        +id: String
+        +capacity: int
+        +currentFloor: int
+        +direction: Direction
+        +status: ElevatorStatus
+        +move(): void
+        +stop(): void
+        +openDoor(): void
+        +closeDoor(): void
+        +addDestination(floor: int): void
+    }
+
+    class Passenger {
+        +id: String
+        +originFloor: int
+        +destinationFloor: int
+    }
+
+    class TripRequest {
+        +requestTime: DateTime
+        +direction: Direction
+    }
+
+    class CabinPanel {
+    }
+
+    class HallCallPanel {
+    }
+
+    class Button {
+        <<abstract>>
+        +label: String
+        +press(): void
+    }
+
+    class CallButton {
+        +direction: Direction
+    }
+
+    class FloorSelectionButton {
+        +targetFloor: int
+    }
+
+    class DoorOpenButton {
+    }
+
+    class DoorCloseButton {
+    }
+
+    class EmergencyButton {
+    }
+
+    class ElevatorDoor {
+        +state: DoorState
+        +open(): void
+        +close(): void
+    }
+
+    class ArrivalBell {
+        +ring(): void
+    }
+
+    class DirectionIndicator {
+        +direction: Direction
+        +turnOn(): void
+        +turnOff(): void
+    }
+
+    class FloorIndicator {
+        +currentFloor: int
+        +update(floor: int): void
+    }
+
+    class SimulationClock {
+        +currentTime: DateTime
+        +tick(): void
+    }
+
+    class EventLogger {
+        +log(eventText: String): void
+    }
+
+    class RandomPassengerGenerator {
+        +generatePassenger(): Passenger
+    }
+
+    class ElevatorStatus {
+        <<enumeration>>
+        IDLE
+        MOVING
+        STOPPED
+        MAINTENANCE
+    }
+
+    class Direction {
+        <<enumeration>>
+        UP
+        DOWN
+        NONE
+    }
+
+    class DoorState {
+        <<enumeration>>
+        OPEN
+        CLOSED
+    }
+
+    Button <|-- CallButton
+    Button <|-- FloorSelectionButton
+    Button <|-- DoorOpenButton
+    Button <|-- DoorCloseButton
+    Button <|-- EmergencyButton
+
+    ElevatorSystem "1" o-- "1" ElevatorController : coordinates
+    ElevatorSystem "1" o-- "1" SimulationClock : uses
+    ElevatorSystem "1" o-- "1" EventLogger : logs
+    ElevatorSystem "1" o-- "1" RandomPassengerGenerator : creates passengers
+    ElevatorSystem "1" --> "1" Building : simulates
+
+    Building "1" o-- "12" Floor : contains
+    Building "1" o-- "5" Elevator : contains
+
+    Floor "1" o-- "3" HallCallPanel : has
+    Floor "1" o-- "5" FloorElevatorAccess : has
+
+    FloorElevatorAccess "1" o-- "1" ElevatorDoor : outer door
+    FloorElevatorAccess "1" o-- "1" ArrivalBell : bell
+    FloorElevatorAccess "1" o-- "1" DirectionIndicator : signal
+
+    Elevator "1" o-- "1" ElevatorDoor : cabin door
+    Elevator "1" o-- "1" CabinPanel : control panel
+    Elevator "1" o-- "1" FloorIndicator : position light
+
+    HallCallPanel "1" o-- "1..2" CallButton : contains
+    CabinPanel "1" o-- "0..*" FloorSelectionButton : contains
+    CabinPanel "1" o-- "1" DoorOpenButton : contains
+    CabinPanel "1" o-- "1" DoorCloseButton : contains
+    CabinPanel "1" o-- "1" EmergencyButton : contains
+
+    Passenger "1" --> "1" TripRequest : creates
+    TripRequest "1" --> "1" Floor : starts from
+    ElevatorController "1" --> "0..*" Elevator : manages
+    ElevatorController "1" --> "0..*" TripRequest : assigns
